@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/icon.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dropload.css" />
+    <script type="text/javascript" src="js/rem.js"></script>
+    <style>
+     .on{
+       background: #FF5B06;
+       color: white;
+     }
+     .a_on{
+       background: #B9B9B9!important;
+     }
+     #time{
+     	
+     	height: .5rem;
+     	text-align: center;
+     	line-height: .5rem;
+     	font-size: .25rem;
+     	display: none;
+     }
+     #time a{
+    
+     	position: relative;	 
+     }
+     #time .icon-youjiantou-copy:before{
+     	position: absolute;
+     	right:-.2rem;
+     }
+    </style>
+  </head>
+
+  <body>
+    <div class="mengban">
+
+    </div>
+
+    <div id="wrap" class="box-flex">
+      <div class="duoyu"></div>
+      <div class="head">
+        <header class="iconfont icon-jiantou">
+          <h1>有奖排行</h1>
+        </header>
+        <div class="head_nav">
+          
+         <ul id="changePage" class="head_nav_ul iconfont icon-query">
+           <li id="p0" class="on"><a>财富榜</a></li>
+           <li id="p1"><a>盈利榜</a></li>
+           <li id="p2"><a>回报榜</a></li>
+           <li id="p3"><a>胜率榜</a></li>
+         </ul>
+        </div>
+        <div id="time">
+        	<a class="time_a iconfont icon-jiantou">本周 （05.30 - 06.06）</a>
+        </div>
+        <div class="head_money">
+          <span class="head_money_left">排行</span>
+          <span class="head_money_right">游戏币</span>
+        </div>
+      </div>
+      <section id="content" class="box-flex-item">
+      
+      </section>
+    </div>
+    <script type="text/javascript" src="js/zepto.js" ></script>
+    <script type="text/javascript" src="js/dropload.min.js" ></script>
+    <script type="text/javascript" src="js/hash.js" ></script>
+<!--    利用hash切换页面-->
+  <script>
+
+		$('#changePage').on('tap','li',function(){
+			
+				var ur=$(this).attr('id');
+				
+				if(ur != "p0"){
+					$("#time").css("display","block")
+					$(".head_money_right").text("奖品")
+					
+					
+				}else{
+					$("#time").css("display","none ")
+					$(".head_money_right").text("游戏币")
+				}
+				
+				window.location.href="index.html#url=page/"+ur;
+
+		});
+		
+		
+      $(".head_nav_ul").on("tap","li",function(){
+        $(".head_nav_ul li").removeClass("on");
+        $(this).addClass("on");
+      })
+     
+   
+  </script>
+<!-- 切换本周和下周-->
+<script>
+
+$("#time").tap(function(){
+	if($("#time").find(".icon-jiantou").length){
+		
+		$("#time").html('<a class="time_a iconfont icon-youjiantou-copy">上周 （05.23 - 05.30）</a>')
+		week = 2;
+		
+	}else{
+		$("#time").html('<a class="time_a iconfont icon-jiantou">本周 （05.30 - 06.06）</a>')
+		week = 1;
+	}
+	
+	
+})
+
+
+</script>
+  	
+  	  <script>
+  	  
+    var str;
+    $("#content").on("tap","li",function(){
+      var ID =$(this).attr("ID");
+      var shuju = localStorage.getItem(ID);
+      
+//数据只存储一分钟      
+      setTimeout(function(){
+				localStorage.removeItem(ID)
+			},6000)
+//    如果本地有数据就用本地数据
+      if(shuju){
+        var data = JSON.parse(shuju).qry_user_info;
+        if(data.signature == undefined){
+            data.signature = "这个家伙很懒，啥也没说";
+        }
+//渲染页面      
+        str = 
+        '<div class="xinxi">'
+        +'<i class="iconfont icon-chahao chahao"></i>'
+        +'<div class="head">'
+        +'<a><img src="'+data.portrait_pic+'"/></a>'
+        +'<ul class="xinxi_ul">'
+        +'<li class="xinxi_ul_li1">'+data.nick_name+'</li>'
+        +'<li class="xinxi_ul_li2 iconfont icon-paixing">'+data.rank+'</li>'
+        +'<li class="xinxi_ul_li3 iconfont icon-jinbi">'+data.coin+'</li></ul>'
+        +'<i class="iconfont icon-bianji-copy"></i><input class="bianji test-ellipsis" type="text" value="'+data.signature+'"/>'
+        +'<p><span class="xinxi_sp1">周回报榜</span><span class="xinxi_sp2 iconfont icon-chahao">3</span>'
+        +'<span class="xinxi_sp3" >周胜率榜</span><span class="xinxi_sp4 iconfont icon-chahao">4</span></p>'
+        +'<a class="zengsong anniu">赠送</a><a class="guanzhu anniu">+关注</a></div>'
+        +'<div class="foot">'
+        +'<i class="iconfont icon-rili foot_i1">本周</i><ul class="xinxi_benzhou foot_ul">'
+        +'<li>'+data.record[0].win+'赢 '+data.record[0].draw+'平'+data.record[0].lost+' 输</li>'
+        +'<li class="shenglv">胜率'+data.record[0].win_rate+'%</li>'
+        +'<li>盈利 '+data.record[0].balance+'</li>'
+        +'<li>回报   '+data.record[0].repay_rate+'%</li></ul>'
+        +'<i class="iconfont icon-rili foot_i2">本月</i><ul class="xinxi_benyue foot_ul">'
+        +'<li>'+data.record[1].win+'赢 '+data.record[1].draw+'平 '+data.record[1].lost+'输</li>'
+        +'<li class="shenglv">胜率  '+data.record[1].win_rate+'%</li>'
+        +'<li>盈利  '+data.record[1].balance+'</li>'
+        +'<li>回报  '+data.record[1].repay_rate+'%</li></ul></div></div>'
+//对弹呈的操作
+        $(".mengban").html(str);
+        console.log(str)
+        $(".mengban").css("display","block")
+         $(".mengban .anniu").tap(function(){
+        $(".mengban .anniu").removeClass("a_on");
+        $(this).addClass("a_on");
+      })
+      $(".chahao").tap(function(){
+        $(".mengban").css("display","none")
+      })
+//     如果没有就ajax请求 
+      }else{
+
+      $.ajax({
+      	type:"get",
+      	url:"http://www.buyinball.com/forum/api/user/qry_user_info?user_no="+ID+"",
+      	dataType:"josn",
+      	success:function(data){
+      	  
+      	  var str_json = data;
+      	  var data = JSON.parse(data).qry_user_info;
+
+      	 localStorage.setItem(ID,str_json);
+         console.log(str_json)
+
+
+
+//    	  console.log(data) 
+//    	  判断个性宣言是否有
+      	  if(data.signature == undefined){
+            data.signature = "这个家伙很懒，啥也没说";
+        }
+      	  str = 
+        '<div class="xinxi">'
+        +'<i class="iconfont icon-chahao chahao"></i>'
+        +'<div class="head">'
+        +'<a><img src="'+data.portrait_pic+'"/></a>'
+        +'<ul class="xinxi_ul">'
+        +'<li class="xinxi_ul_li1">'+data.nick_name+'</li>'
+        +'<li class="xinxi_ul_li2 iconfont icon-paixing">'+data.rank+'</li>'
+        +'<li class="xinxi_ul_li3 iconfont icon-jinbi">'+data.coin+'</li></ul>'
+        +'<i class="iconfont icon-bianji-copy"></i><input class="bianji test-ellipsis" type="text" value="'+data.signature+'"/>'
+        +'<p><span class="xinxi_sp1">周回报榜</span><span class="xinxi_sp2 iconfont icon-chahao">3</span>'
+        +'<span class="xinxi_sp3" >周胜率榜</span><span class="xinxi_sp4 iconfont icon-chahao">4</span></p>'
+        +'<a class="zengsong anniu">赠送</a><a class="guanzhu anniu">+关注</a></div>'
+        +'<div class="foot">'
+        +'<i class="iconfont icon-rili foot_i1">本周</i><ul class="xinxi_benzhou foot_ul">'
+        +'<li>'+data.record[0].win+'赢 '+data.record[0].draw+'平'+data.record[0].lost+' 输</li>'
+        +'<li class="shenglv">胜率'+data.record[0].win_rate+'%</li>'
+        +'<li>盈利 '+data.record[0].balance+'</li>'
+        +'<li>回报   '+data.record[0].repay_rate+'%</li></ul>'
+        +'<i class="iconfont icon-rili foot_i2">本月</i><ul class="xinxi_benyue foot_ul">'
+        +'<li>'+data.record[1].win+'赢 '+data.record[1].draw+'平 '+data.record[1].lost+'输</li>'
+        +'<li class="shenglv">胜率  '+data.record[1].win_rate+'%</li>'
+        +'<li>盈利  '+data.record[1].balance+'</li>'
+        +'<li>回报  '+data.record[1].repay_rate+'%</li></ul></div></div>'
+//      插入数据
+        $(".mengban").html(str);
+        $(".mengban").css("display","block")
+//点击隐藏蒙版        
+        $(".mengban .anniu").tap(function(){
+        $(".mengban .anniu").removeClass("a_on");
+        $(this).addClass("a_on");
+      })
+      $(".chahao").tap(function(){
+        $(".mengban").css("display","none")
+      })
+      	}
+      });
+
+      }
+
+    })
+    </script>
+  
+  </body>
+
+</html>

@@ -1,0 +1,59 @@
+  <div class="lists">
+  <ul class="content_nav">
+   
+   
+   
+   
+       </ul>
+  </div>
+  
+  
+
+    <script>
+    $.ajax({
+    	type:"get",
+    	url:"http://www.buyinball.com/web/services/user/rank/3?week=1",
+    	dataType:"json",
+    	async:true,
+    	success:function(data){
+    	  var data =data.res_data.value.list
+    	  console.log(data)
+    	  var str = "";
+    	  $.each(data, function(i) {
+    	  	str += '<li  id="'+data[i].USER_ID+'"><span class="sp1">'+data[i].RANK+'.</span>'
+    	  	+'<span class="sp2"><img src="'+data[i].uPic+'"/>'
+    	  	+'</span><span class="sp3">'+data[i].uName+'</span>'
+    	  	+'<span class="sp4">'+data[i].aName+'</span></li>'
+    	  })
+    	  $(".content_nav").html(str);
+    	}
+    });
+    
+    
+   	$("#time").tap(function(){
+  		if($("#p3").hasClass("on")){
+  		
+  		$.ajax({
+    	type:"get",
+    	url:"http://www.buyinball.com/web/services/user/rank/3?week="+week+"",
+    	dataType:"json",
+    	async:true,
+    	success:function(data){
+    	  var data =data.res_data.value.list
+    	  console.log(data)
+    	  var str = "";
+    	  $.each(data, function(i) {
+    	  	str += '<li  id="'+data[i].USER_ID+'"><span class="sp1">'+data[i].RANK+'.</span>'
+    	  	+'<span class="sp2"><img src="'+data[i].uPic+'"/>'
+    	  	+'</span><span class="sp3">'+data[i].uName+'</span>'
+    	  	+'<span class="sp4">'+data[i].aName+'</span></li>'
+    	  })
+    	  $(".content_nav").html(str);
+    	}
+    });
+  		
+  		
+  		}
+  		
+  	})
+    </script>

@@ -1,0 +1,88 @@
+
+      	
+      	
+        <div class="lists">
+       <ul class="content_nav">
+    
+       </ul>
+       </div>
+  
+
+    <script>
+    $.ajax({
+    	type:"get",
+    	url:"http://www.buyinball.com/web/services/user/orderRank.json?cur_page=0&per_page_num=10",
+    	dataType:"json",
+    	async:true,
+    	success:function(data){
+    	  var data = data.res_data;
+    	  console.log(data)
+    	  var str = "";
+    	  $.each(data, function(i) {
+    	  	str += '<li  id="'+data[i].client_id+'"><span class="sp1">'+data[i].rank_num+'.</span>'
+    	  	+'<span class="sp2"><img src="'+data[i].user_avatar+'"/>'
+    	  	+'</span><span class="sp3">'+data[i].nick_name+'</span>'
+    	  	+'<span class="sp4">'+data[i].balance+'</span></li>'
+    	  })
+    	  $(".content_nav").html(str);
+    	}
+    });
+    </script>
+    <script>
+    $(function(){
+      var page = 1;
+      // dropload
+      var dropload = $('#content').dropload({
+         domDown : {
+           
+              domClass   : 'dropload-down',
+              domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+              domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+              domNoData  : '<div class="dropload-noData">暂无数据</div>'
+          },
+          loadDownFn : function(me){
+            if(page>9){
+              $(".loading").remove(); 
+              $(".dropload-load").text("暂无更多数据")
+              return
+            }
+              $.ajax({
+                  type: 'GET',
+                  url: 'http://www.buyinball.com/web/services/user/orderRank.json?cur_page='+page+'&per_page_num=10',
+                  dataType: 'json',
+                  success: function(data){
+                  var str_json = data;
+//                localStorage.setItem("用户数据",str_json);
+//                console.log(str_json)
+                    var  data =  str_json.res_data;
+                    var str = '';
+                     $.each(data, function(i) {
+                      str += '<li id="'+data[i].client_id+'"><span class="sp1" >'+data[i].rank_num+'.</span>'
+                      +'<span class="sp2"><img src="'+data[i].user_avatar+'"/>'
+                      +'</span><span class="sp3">'+data[i].nick_name+'</span>'
+                      +'<span class="sp4">'+data[i].balance+'</span></li>'
+                    })      
+              
+                      // 为了测试，延迟1秒加载
+                      setTimeout(function(){
+                          $('.content_nav').append(str);
+                          // 每次数据加载完，必须重置
+                          dropload.resetload();
+                      },1000);
+                      
+                      page++; 
+                  },
+                  error: function(xhr, type){
+                      alert('Ajax error!');
+                      // 即使加载出错，也得重置
+                      dropload.resetload();
+                  }
+                });
+              }
+            });
+        });
+        
+    </script>
+  
+  	
+  
